@@ -120,6 +120,13 @@ export interface ApixInstance {
     setHeader(headers: HeadersInit): ApixInstance;
     setHeader(name: string, value: string): ApixInstance;
     transformResponse(transformer: TransformResponse): ApixInstance;
+    request<TResponse = any>(url: string, options?: RequestOptions<TResponse>): Promise<TResponse>;
+    get<TResponse = any>(url: string, options?: RequestOptions<TResponse>): Promise<TResponse>;
+    post<TResponse = any>(url: string, options?: RequestOptions<TResponse>): Promise<TResponse>;
+    put<TResponse = any>(url: string, options?: RequestOptions<TResponse>): Promise<TResponse>;
+    patch<TResponse = any>(url: string, options?: RequestOptions<TResponse>): Promise<TResponse>;
+    delete<TResponse = any>(url: string, options?: RequestOptions<TResponse>): Promise<TResponse>;
+    form<TData = Record<string, any>>(defaults?: MaybeFactory<TData>, options?: ModelOptions<TData>): ApixModel<TData>;
     create<TData = any>(url: string, options?: ModelOptions<TData>): ApixModel<TData>;
     createModel<TData = any>(url: string, options?: ModelOptions<TData>): ApixModel<TData>;
     createCollection<TItem = any>(url: string, options?: ModelOptions<TItem[]>): ApixModel<TItem[]>;

@@ -298,6 +298,123 @@ Example global spinner:
 
 `apix.processing` is `true` while at least one model created by that `apix` instance is making a request.
 
+## Direct Requests
+
+You can make one-off requests without creating a model.
+
+```ts
+await apix.get('/profile')
+await apix.post('/signup')
+await apix.put('/settings')
+await apix.patch('/profile')
+await apix.delete('/sessions/current')
+```
+
+Direct requests use the same base URL, headers, `fetch`, timeout, response transform, and error handling as models.
+
+### Params
+
+For `GET`, params become query params:
+
+```ts
+const countries = await apix.get('/countries', {
+  params: {
+    active: true,
+    locale: 'en',
+  },
+})
+```
+
+Request:
+
+```text
+GET /countries?active=true&locale=en
+```
+
+For body methods, params become JSON body:
+
+```ts
+await apix.post('/newsletter/subscribe', {
+  params: {
+    email: 'anna@example.com',
+  },
+})
+```
+
+Request body:
+
+```json
+{
+  "email": "anna@example.com"
+}
+```
+
+### Body
+
+Use `body` when you want full control over the request body:
+
+```ts
+await apix.post('/auth/login', {
+  body: {
+    email: 'anna@example.com',
+    password: 'secret',
+  },
+})
+```
+
+`FormData` also works:
+
+```ts
+const formData = new FormData()
+formData.append('file', file)
+
+await apix.post('/files/upload', {
+  body: formData,
+})
+```
+
+### Callbacks
+
+Direct requests support the same callbacks:
+
+```ts
+await apix.post('/signup', {
+  params: {
+    email: 'anna@example.com',
+  },
+  onSuccess: (body) => {
+    console.log(body)
+  },
+  onError: (error) => {
+    console.log(error.message)
+  },
+})
+```
+
+### Return Value
+
+Direct requests return a promise with the response data:
+
+```ts
+const profile = await apix.get<{ id: number; name: string }>('/profile')
+```
+
+Failed requests reject with `ApixError`:
+
+```ts
+try {
+  await apix.post('/signup', {
+    params: {
+      email: '',
+    },
+  })
+} catch (error) {
+  if (error instanceof ApixError) {
+    console.log(error.error('email'))
+  }
+}
+```
+
 ## Factory Methods
 
 ### `apix.create<T>(url, options?)`
@@ -321,6 +438,73 @@ Alias to `apix.create()`.
 ```ts
 const invoice = apix.createModel('/invoices/77')
 ```
+
+### `apix.form<T>(defaults?, options?)`
+
+Creates a local JSON form model without an initial request and without a URL.
+
+Use this for registration, login, signup, filters, modal forms, and any form where you already know the initial fields and only need to submit later.
+
+```ts
+const form = apix.form({
+  first_name: '',
+  last_name: '',
+  email: '',
+  phone: '',
+  country: '',
+  password: '',
+  password_confirmation: '',
+  terms: false,
+})
+```
+
+This is equivalent to a JSON model with:
+
+```ts
+{
+  default: () => defaults,
+  immediate: false,
+}
+```
+
+Because there is no URL, pass the URL when you submit:
+
+```ts
+await form.post('/signup')
+```
+
+Or:
+
+```ts
+await form.post('/signup', {
+  only: ['email', 'password', 'password_confirmation', 'terms'],
+})
+```
+
+Empty form:
+
+```ts
+const subscription = apix.form({})
+```
+
+With options:
+
+```ts
+const login = apix.form(
+  {
+    email: '',
+    password: '',
+  },
+  {
+    timeout: 5000,
+    onError: (error) => {
+      console.log(error.message)
+    },
+  },
+)
+```
+
+`apix.form()` is for JSON data. For upload forms with `FormData`, use `apix.createForm()`.
 
 ### `apix.createCollection<TItem>(url, options?)`
 
@@ -2280,6 +2464,60 @@ const createWarehouse = apix.create('/warehouses', {
 await createWarehouse.post()
 ```
 
+### Local Signup Form
+
+```ts
+const signupForm = apix.form({
+  first_name: '',
+  last_name: '',
+  email: '',
+  phone: '',
+  country: '',
+  password: '',
+  password_confirmation: '',
+  terms: false,
+})
+
+const submit = async () => {
+  await signupForm.post('/auth/signup')
+}
+```
+
+Use it in UI like any other model:
+
+```vue
+<el-form-item label="Email" :error="signupForm.error('email')">
+  <el-input v-model="signupForm.data.email" />
+</el-form-item>
+
+<el-form-item label="Password" :error="signupForm.error('password')">
+  <el-input v-model="signupForm.data.password" type="password" />
+</el-form-item>
+
+<el-checkbox v-model="signupForm.data.terms">
+  I accept terms
+</el-checkbox>
+
+<el-button :loading="signupForm.processing" @click="submit">
+  Create account
+</el-button>
+```
+
+You can still use request options:
+
+```ts
+await signupForm.post('/auth/signup', {
+  only: [
+    'first_name',
+    'last_name',
+    'email',
+    'password',
+    'password_confirmation',
+    'terms',
+  ],
+})
+```
+
 ### Search Form
 
 ```vue
@@ -2788,10 +3026,12 @@ apix.create('/resource/1', {
 For create forms:
 
 ```ts
-apix.create('/resource', {
-  immediate: false,
-  default: () => ({ /* fields */ }),
+const form = apix.form({
+  name: '',
+  email: '',
 })
+
+await form.post('/resource')
 ```
 
 For selectors:

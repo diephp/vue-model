@@ -4,7 +4,9 @@ import type {
   ApixInstance,
   ApixModel,
   InternalApixState,
+  MaybeFactory,
   ModelOptions,
+  RequestOptions,
   TransformResponse,
 } from './types.js'
 
@@ -53,6 +55,73 @@ export const createApix = (): ApixInstance => {
     transformResponse(transformer: TransformResponse): ApixInstance {
       state.transformers.push(transformer)
       return apix
+    },
+
+    request<TResponse = any>(
+      url: string,
+      options: RequestOptions<TResponse> = {},
+    ): Promise<TResponse> {
+      return createApixModel<TResponse>(
+        state,
+        url,
+        {
+          default: () => null as TResponse,
+          immediate: false,
+          snapshot: false,
+        },
+        'json',
+      ).request(options)
+    },
+
+    get<TResponse = any>(
+      url: string,
+      options: RequestOptions<TResponse> = {},
+    ): Promise<TResponse> {
+      return apix.request<TResponse>(url, { ...options, method: 'GET' })
+    },
+
+    post<TResponse = any>(
+      url: string,
+      options: RequestOptions<TResponse> = {},
+    ): Promise<TResponse> {
+      return apix.request<TResponse>(url, { ...options, method: 'POST' })
+    },
+
+    put<TResponse = any>(
+      url: string,
+      options: RequestOptions<TResponse> = {},
+    ): Promise<TResponse> {
+      return apix.request<TResponse>(url, { ...options, method: 'PUT' })
+    },
+
+    patch<TResponse = any>(
+      url: string,
+      options: RequestOptions<TResponse> = {},
+    ): Promise<TResponse> {
+      return apix.request<TResponse>(url, { ...options, method: 'PATCH' })
+    },
+
+    delete<TResponse = any>(
+      url: string,
+      options: RequestOptions<TResponse> = {},
+    ): Promise<TResponse> {
+      return apix.request<TResponse>(url, { ...options, method: 'DELETE' })
+    },
+
+    form<TData = Record<string, any>>(
+      defaults: MaybeFactory<TData> = (() => ({}) as TData),
+      options: ModelOptions<TData> = {},
+    ): ApixModel<TData> {
+      return createApixModel<TData>(
+        state,
+        '',
+        {
+          ...options,
+          default: defaults,
+          immediate: false,
+        },
+        'json',
+      )
     },
 
     create<TData = any>(
