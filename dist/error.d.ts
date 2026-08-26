@@ -25,4 +25,3 @@ export declare class ApixError extends Error {
 }
 export declare const getMessageFromBody: (body: any, fallback?: string) => string;
 export declare const getErrorsFromBody: (body: any) => any;
-//# sourceMappingURL=error.d.ts.map

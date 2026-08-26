@@ -145,4 +145,3 @@ export interface ModelInternals {
     muteWatch: number;
     bodyType: 'json' | 'formData';
 }
-//# sourceMappingURL=types.d.ts.map

@@ -9,4 +9,3 @@ export declare const mergePayloadWithParams: (payload: any, params?: Params) => 
 export declare const hasHeader: (headers: Headers, name: string) => boolean;
 export declare const createBody: (method: string, payload: any, headers: Headers) => BodyInit | undefined;
 export declare const readResponseBody: (response: Response) => Promise<any>;
-//# sourceMappingURL=http.d.ts.map

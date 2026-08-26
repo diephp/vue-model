@@ -1,31 +1,37 @@
 {
   "name": "@diephp/vue-model",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Small Vue 3 fetch-based API model helper for forms, collections, and validation errors.",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/vue-model.js",
+  "module": "dist/vue-model.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "import": "./dist/vue-model.js",
+      "default": "./dist/vue-model.js"
     }
   },
   "files": [
     "dist",
-    "PLAN.md",
     "README.md"
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "tsc"
+    "build": "npm run build:js && npm run build:types",
+    "build:js": "vite build",
+    "build:types": "tsc --emitDeclarationOnly",
+    "typecheck": "tsc --noEmit",
+    "prepack": "npm run build"
   },
-  "dependencies": {},
   "peerDependencies": {
     "vue": "^3.0.0"
   },
   "devDependencies": {
+    "esbuild": "^0.28.2",
     "typescript": "^6.0.3",
+    "vite": "^8.2.2",
     "vue": "^3.5.0"
   }
 }

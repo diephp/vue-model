@@ -21,4 +21,3 @@ export declare const createSnapshot: (source: any, omit?: PathList) => any;
 export declare const deepEqual: (left: any, right: any) => boolean;
 export declare const getDirtyData: (current: any, original: any) => any;
 export declare const collectChangedPaths: (current: any, previous: any, prefix?: string) => string[];
-//# sourceMappingURL=path.d.ts.map

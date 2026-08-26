@@ -28,6 +28,32 @@ Vue is a peer dependency:
 npm install vue
 ```
 
+## Build
+
+Build the package into `dist`:
+
+```bash
+npm run build
+```
+
+Run only JavaScript bundling:
+
+```bash
+npm run build:js
+```
+
+Run only type declaration generation:
+
+```bash
+npm run build:types
+```
+
+When the package is packed or published, `prepack` runs the build automatically:
+
+```bash
+npm pack
+```
+
 ## Quick Start
 
 Create a configured API instance once:
