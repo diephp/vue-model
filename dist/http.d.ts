@@ -1,0 +1,12 @@
+import type { HeadersFactory, HttpMethod, Params } from './types.js';
+export declare const normalizeMethod: (method?: HttpMethod) => string;
+export declare const isBodylessMethod: (method: string) => boolean;
+export declare const resolveMaybeFactory: <T>(value: T | (() => T) | undefined) => T | undefined;
+export declare const resolveHeaders: (globalHeaders?: HeadersInit, modelHeaders?: HeadersFactory, requestHeaders?: HeadersFactory) => Headers;
+export declare const appendParamsToUrl: (url: string, params?: Params) => string;
+export declare const resolveUrl: (baseUrl: string, url?: string) => string;
+export declare const mergePayloadWithParams: (payload: any, params?: Params) => any;
+export declare const hasHeader: (headers: Headers, name: string) => boolean;
+export declare const createBody: (method: string, payload: any, headers: Headers) => BodyInit | undefined;
+export declare const readResponseBody: (response: Response) => Promise<any>;
+//# sourceMappingURL=http.d.ts.map
