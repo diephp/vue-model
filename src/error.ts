@@ -1,5 +1,5 @@
 import { getByPath, isPlainObject } from './path.js'
-import type { PathKey } from './types.js'
+import type { PathInput, PathKey } from './types.js'
 
 export interface ApixErrorInput {
   httpCode: number | null
@@ -65,14 +65,17 @@ export class ApixError extends Error {
     this.errorBag = input.errors ?? input.body?.errors ?? {}
   }
 
-  public error(key: PathKey): string | null {
+  public error(key: PathInput): string | null {
     return this.errors(key)[0] ?? null
   }
 
   public errors(): any
-  public errors(key: PathKey): string[]
-  public errors(key?: PathKey): any {
+  public errors(key: PathInput): string[]
+  public errors(key?: PathInput): any {
     if (key === undefined) return this.errorBag
+    if (Array.isArray(key)) {
+      return key.flatMap((path) => toArray(getByPath(this.errorBag, path)))
+    }
 
     const value = getByPath(this.errorBag, key)
     return toArray(value)
@@ -82,9 +85,8 @@ export class ApixError extends Error {
     return flattenKeys(this.errorBag)
   }
 
-  public has(keyOrKeys: PathKey | PathKey[]): boolean {
-    const keys = Array.isArray(keyOrKeys) ? keyOrKeys : [keyOrKeys]
-    return keys.some((key) => this.error(key) !== null)
+  public has(keyOrKeys: PathInput): boolean {
+    return this.error(keyOrKeys) !== null
   }
 
   public firstKey(): string | null {

@@ -1781,6 +1781,8 @@ then:
 model.message // "Validation failed"
 model.error('name') // "Name is required"
 model.errors('name') // ["Name is required"]
+model.error(['name', 'settings.resource.limit']) // "Name is required"
+model.errors(['name', 'settings.resource.limit']) // ["Name is required", "Limit is too high"]
 model.errorKeys() // ["name", "settings.resource.limit"]
 ```
 
@@ -1798,12 +1800,45 @@ Nested key:
 <el-form-item :error="product.error('settings.resource.limit')">
 ```
 
+List of keys:
+
+```vue
+<el-form-item :error="product.error(['slug', 'domain'])">
+```
+
+This returns the first error found in the same order as the keys.
+
 ### `model.errors(key)`
 
 Returns all error strings for a field.
 
 ```ts
 model.errors('name')
+```
+
+You can pass several keys. The result is one flat array:
+
+```ts
+model.errors(['slug', 'domain'])
+```
+
+Useful when one UI input visually represents more than one API field:
+
+```vue
+<form-input
+  v-model="resourceForm.data.slug"
+  :disabled="resourceForm.processing"
+  required
+  :errors="resourceForm.errors(['slug', 'domain'])"
+  label="Slug"
+/>
+
+<form-simple-select
+  v-model="resourceForm.data.domain"
+  required
+  :options="domains.data"
+  label="Domain"
+/>
 ```
 
 Show all field messages:
@@ -1964,7 +1999,9 @@ Methods:
 
 ```ts
 error.error('name')
+error.error(['name', 'slug'])
 error.errors('name')
+error.errors(['name', 'slug'])
 error.errors()
 error.keys()
 error.has('name')
@@ -1999,6 +2036,15 @@ The same key format works in:
 - `getOriginal(key)`;
 - `reset({ only, omit })`;
 - `default({ only, omit })`.
+
+For errors, `key` can be a single key or a list of keys:
+
+```ts
+model.error('name')
+model.error(['slug', 'domain'])
+model.errors('name')
+model.errors(['slug', 'domain'])
+```
 
 ### Plain Key
 

@@ -13,6 +13,7 @@ export type HttpMethod =
 
 export type PathKey = string | number
 export type PathList = PathKey[]
+export type PathInput = PathKey | PathList
 export type MaybePromise<T> = T | Promise<T>
 export type MaybeFactory<T> = T | (() => T)
 export type ParamsValue =
@@ -156,11 +157,11 @@ export interface ApixModel<TData = any> {
   getDirty(): any
   getDirty(key: PathKey): any
 
-  error(key: PathKey): string | null
+  error(key: PathInput): string | null
   errors(): any
-  errors(key: PathKey): string[]
+  errors(key: PathInput): string[]
   errorKeys(): string[]
-  hasErrors(keyOrKeys: PathKey | PathKey[]): boolean
+  hasErrors(keyOrKeys: PathInput): boolean
   firstErrorKey(): string | null
   getError(): ApixError | null
   clearError(key: PathKey): void

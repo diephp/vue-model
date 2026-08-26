@@ -1,4 +1,4 @@
-import type { PathKey } from './types.js';
+import type { PathInput } from './types.js';
 export interface ApixErrorInput {
     httpCode: number | null;
     body?: any;
@@ -16,11 +16,11 @@ export declare class ApixError extends Error {
     readonly cause?: unknown;
     private readonly errorBag;
     constructor(input: ApixErrorInput);
-    error(key: PathKey): string | null;
+    error(key: PathInput): string | null;
     errors(): any;
-    errors(key: PathKey): string[];
+    errors(key: PathInput): string[];
     keys(): string[];
-    has(keyOrKeys: PathKey | PathKey[]): boolean;
+    has(keyOrKeys: PathInput): boolean;
     firstKey(): string | null;
 }
 export declare const getMessageFromBody: (body: any, fallback?: string) => string;

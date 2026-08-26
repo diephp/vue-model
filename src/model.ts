@@ -31,6 +31,7 @@ import type {
   InternalApixState,
   ModelInternals,
   ModelOptions,
+  PathInput,
   PathKey,
   RequestOptions,
   ResolvedModelOptions,
@@ -765,11 +766,11 @@ export const createApixModel = <TData>(
     isDirty,
     getOriginal,
     getDirty,
-    error: (key: PathKey) => getLastError()?.error(key) ?? null,
-    errors: (key?: PathKey) =>
+    error: (key: PathInput) => getLastError()?.error(key) ?? null,
+    errors: (key?: PathInput) =>
       key === undefined ? currentErrors() : getLastError()?.errors(key) ?? [],
     errorKeys: () => getLastError()?.keys() ?? [],
-    hasErrors: (keyOrKeys: PathKey | PathKey[]) =>
+    hasErrors: (keyOrKeys: PathInput) =>
       getLastError()?.has(keyOrKeys) ?? false,
     firstErrorKey: () => getLastError()?.firstKey() ?? null,
     getError: () => getLastError(),
