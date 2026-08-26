@@ -64,6 +64,47 @@ export const mergeDeep = <T>(target: T, source: any): T => {
   return result as T
 }
 
+export const syncDeep = <T>(target: T, source: any): T => {
+  if (deepEqual(target, source)) return target
+
+  if (Array.isArray(target) && Array.isArray(source)) {
+    target.splice(0, target.length, ...source.map((item) => cloneDeep(item)))
+    return target
+  }
+
+  if (isPlainObject(target) && isPlainObject(source)) {
+    const targetRecord = target as Record<string, any>
+    const sourceRecord = source as Record<string, any>
+
+    Object.keys(targetRecord).forEach((key) => {
+      if (!hasOwn(sourceRecord, key)) {
+        delete targetRecord[key]
+      }
+    })
+
+    Object.keys(sourceRecord).forEach((key) => {
+      const current = targetRecord[key]
+      const next = sourceRecord[key]
+
+      if (
+        (Array.isArray(current) && Array.isArray(next)) ||
+        (isPlainObject(current) && isPlainObject(next))
+      ) {
+        syncDeep(current, next)
+        return
+      }
+
+      if (!deepEqual(current, next)) {
+        targetRecord[key] = cloneDeep(next)
+      }
+    })
+
+    return target
+  }
+
+  return cloneDeep(source) as T
+}
+
 export const locatePath = (source: any, path: PathKey): PathHit => {
   const normalized = normalizePath(path)
 

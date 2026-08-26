@@ -9,6 +9,7 @@ export declare const isObjectLike: (value: unknown) => value is Record<string, a
 export declare const normalizePath: (path: PathKey) => string;
 export declare const cloneDeep: <T>(value: T) => T;
 export declare const mergeDeep: <T>(target: T, source: any) => T;
+export declare const syncDeep: <T>(target: T, source: any) => T;
 export declare const locatePath: (source: any, path: PathKey) => PathHit;
 export declare const getByPath: (source: any, path: PathKey) => any;
 export declare const hasByPath: (source: any, path: PathKey) => boolean;

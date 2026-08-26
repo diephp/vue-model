@@ -1,6 +1,6 @@
 {
   "name": "@diephp/vue-model",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "Small Vue 3 fetch-based API model helper for forms, collections, and validation errors.",
   "type": "module",
   "main": "dist/vue-model.js",

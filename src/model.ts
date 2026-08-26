@@ -24,6 +24,7 @@ import {
   locatePath,
   mergeDeep,
   setBySegments,
+  syncDeep,
 } from './path.js'
 import type {
   AfterResponse,
@@ -303,7 +304,12 @@ export const createApixModel = <TData>(
     withMutedWatch(() => {
       const base =
         mode === 'reload' ? getDefaultData(options) : normalizeData(state.data)
-      state.data = mergeDeep(base, responseData)
+      const nextData = mergeDeep(base, responseData)
+      const syncedData = syncDeep(state.data, nextData)
+
+      if (syncedData !== state.data) {
+        state.data = syncedData
+      }
     })
   }
 
@@ -327,12 +333,21 @@ export const createApixModel = <TData>(
           })
         }
 
-        state.data = next
+        const syncedData = syncDeep(state.data, next)
+
+        if (syncedData !== state.data) {
+          state.data = syncedData
+        }
         return
       }
 
       const filtered = filterData(source, options)
-      state.data = mergeDeep(state.data, filtered)
+      const next = mergeDeep(state.data, filtered)
+      const syncedData = syncDeep(state.data, next)
+
+      if (syncedData !== state.data) {
+        state.data = syncedData
+      }
     })
   }
 

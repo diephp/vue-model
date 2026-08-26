@@ -864,6 +864,26 @@ await model.send({
 
 Error responses do not apply to `model.data`.
 
+For validation endpoints, send only the fields needed for validation and apply only the status fields returned by the server.
+
+```ts
+watch(
+  () => [form.data.slug, form.data.domain],
+  debounce(() => {
+    if (!form.data.slug || !form.data.domain) return
+
+    form.post('/validate-domain', {
+      only: ['slug', 'domain'],
+      response: {
+        only: ['message', 'status'],
+      },
+    }).catch(() => undefined)
+  }, 1000),
+)
+```
+
+This keeps `slug` and `domain` as user-controlled fields, while `message` and `status` can be shown in the UI.
+
 ### `watch`
 
 Automatically sends the model when watched fields change.
