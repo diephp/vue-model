@@ -33,6 +33,10 @@ export interface ResponseFilter {
   omit?: PathList
 }
 
+export interface ApixOptions {
+  timeout?: number
+}
+
 export interface WatchOptions {
   debounce?: number
   only?: PathList
@@ -205,6 +209,7 @@ export interface InternalApixState {
   headers: HeadersInit
   activeRequests: number
   transformers: TransformResponse[]
+  timeout?: number
 }
 
 export interface ModelInternals {

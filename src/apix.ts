@@ -3,6 +3,7 @@ import { createApixModel } from './model.js'
 import type {
   ApixInstance,
   ApixModel,
+  ApixOptions,
   InternalApixState,
   MaybeFactory,
   ModelOptions,
@@ -10,12 +11,13 @@ import type {
   TransformResponse,
 } from './types.js'
 
-export const createApix = (): ApixInstance => {
+export const createApix = (options: ApixOptions = {}): ApixInstance => {
   const state = reactive<InternalApixState>({
     baseUrl: '',
     headers: {},
     activeRequests: 0,
     transformers: [],
+    timeout: options.timeout,
   })
 
   const apix: ApixInstance = {

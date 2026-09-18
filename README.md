@@ -934,8 +934,37 @@ When the package applies a response, `reset`, or `default`, the watcher is muted
 
 Aborts a request after the given number of milliseconds.
 
+Set a global timeout when creating the API instance:
+
 ```ts
-timeout: 5000
+const apix = createApix({
+  timeout: 10_000,
+})
+```
+
+Override it for one model:
+
+```ts
+const orders = apix.create('/orders', {
+  timeout: 5_000,
+})
+```
+
+Or for one request:
+
+```ts
+await orders.get({ timeout: 2_000 })
+
+await apix.post('/reports', {
+  timeout: 30_000,
+  body: report,
+})
+```
+
+The request value overrides the model value, and the model value overrides the global value. Use `timeout: 0` to disable an inherited timeout:
+
+```ts
+await orders.get({ timeout: 0 })
 ```
 
 Timeout errors reject with `ApixError`:

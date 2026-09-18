@@ -4,6 +4,7 @@ export type {
   AfterResponse,
   ApixInstance,
   ApixModel,
+  ApixOptions,
   BeforeRequest,
   ErrorCallback,
   FinishCallback,

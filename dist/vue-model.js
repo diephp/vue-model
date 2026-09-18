@@ -1,15 +1,15 @@
-import { getCurrentScope as Lt, markRaw as Ht, onScopeDispose as zt, reactive as dt, toRaw as S, watch as Kt } from "vue";
+import { getCurrentScope as Lt, markRaw as Ht, onScopeDispose as zt, reactive as dt, toRaw as B, watch as Kt } from "vue";
 var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
   if (t === null || typeof t != "object") return !1;
-  const r = Object.getPrototypeOf(S(t));
+  const r = Object.getPrototypeOf(B(t));
   return r === Object.prototype || r === null;
 }, G = (t) => t !== null && typeof t == "object", Gt = (t) => String(t), h = (t) => {
-  const r = S(t);
+  const r = B(t);
   if (Array.isArray(r)) return r.map((e) => h(e));
   if (f(r)) {
     const e = {};
-    return Object.keys(r).forEach((n) => {
-      e[n] = h(r[n]);
+    return Object.keys(r).forEach((s) => {
+      e[s] = h(r[s]);
     }), e;
   }
   return r;
@@ -17,28 +17,28 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
   if (r === void 0) return h(t);
   if (Array.isArray(r) || !f(t) || !f(r)) return h(r);
   const e = h(t);
-  return Object.keys(r).forEach((n) => {
-    if (f(e[n]) && f(r[n])) {
-      e[n] = F(e[n], r[n]);
+  return Object.keys(r).forEach((s) => {
+    if (f(e[s]) && f(r[s])) {
+      e[s] = F(e[s], r[s]);
       return;
     }
-    e[n] = h(r[n]);
+    e[s] = h(r[s]);
   }), e;
 }, K = (t, r) => {
   if (q(t, r)) return t;
   if (Array.isArray(t) && Array.isArray(r))
     return t.splice(0, t.length, ...r.map((e) => h(e))), t;
   if (f(t) && f(r)) {
-    const e = t, n = r;
-    return Object.keys(e).forEach((o) => {
-      M(n, o) || delete e[o];
-    }), Object.keys(n).forEach((o) => {
-      const c = e[o], a = n[o];
+    const e = t, s = r;
+    return Object.keys(e).forEach((n) => {
+      M(s, n) || delete e[n];
+    }), Object.keys(s).forEach((n) => {
+      const c = e[n], a = s[n];
       if (Array.isArray(c) && Array.isArray(a) || f(c) && f(a)) {
         K(c, a);
         return;
       }
-      q(c, a) || (e[o] = h(a));
+      q(c, a) || (e[n] = h(a));
     }), t;
   }
   return h(r);
@@ -49,28 +49,28 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
     value: void 0,
     segments: []
   };
-  const n = S(t);
-  if (M(n, e)) return {
+  const s = B(t);
+  if (M(s, e)) return {
     exists: !0,
-    value: n[e],
+    value: s[e],
     segments: [e]
   };
-  const o = e.split(".");
-  let c = n;
+  const n = e.split(".");
+  let c = s;
   const a = [];
-  for (let i = 0; i < o.length; i += 1) {
+  for (let i = 0; i < n.length; i += 1) {
     if (!G(c)) return {
       exists: !1,
       value: void 0,
       segments: a
     };
-    const b = o.slice(i).join("."), D = S(c);
+    const b = n.slice(i).join("."), D = B(c);
     if (M(D, b)) return {
       exists: !0,
       value: D[b],
       segments: [...a, b]
     };
-    const E = o[i];
+    const E = n[i];
     if (!M(D, E)) return {
       exists: !1,
       value: void 0,
@@ -88,69 +88,69 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
   return e.exists ? e.value : void 0;
 }, ht = (t, r, e) => {
   if (r.length === 0) return;
-  let n = t;
-  r.forEach((o, c) => {
+  let s = t;
+  r.forEach((n, c) => {
     if (c === r.length - 1) {
-      n[o] = h(e);
+      s[n] = h(e);
       return;
     }
-    (!G(n[o]) || Array.isArray(n[o])) && (n[o] = {}), n = n[o];
+    (!G(s[n]) || Array.isArray(s[n])) && (s[n] = {}), s = s[n];
   });
 }, mt = (t, r) => {
   const e = J(t, r);
   if (!e.exists || e.segments.length === 0) return;
-  let n = t;
-  for (let o = 0; o < e.segments.length - 1; o += 1) n = n?.[e.segments[o]];
-  G(n) && delete n[e.segments[e.segments.length - 1]];
+  let s = t;
+  for (let n = 0; n < e.segments.length - 1; n += 1) s = s?.[e.segments[n]];
+  G(s) && delete s[e.segments[e.segments.length - 1]];
 }, Ut = (t, r) => {
   const e = {};
-  return r.forEach((n) => {
-    const o = J(t, n);
-    o.exists && ht(e, o.segments, o.value);
+  return r.forEach((s) => {
+    const n = J(t, s);
+    n.exists && ht(e, n.segments, n.value);
   }), e;
 }, R = (t, r) => {
   if (t instanceof FormData) return t;
   let e = r?.only !== void 0 ? Ut(t, r.only) : h(t);
-  return r?.omit?.forEach((n) => {
-    mt(e, n);
+  return r?.omit?.forEach((s) => {
+    mt(e, s);
   }), e;
 }, H = (t, r) => t instanceof FormData ? null : R(t, { omit: r }), q = (t, r) => {
-  const e = S(t), n = S(r);
-  if (Object.is(e, n)) return !0;
-  if (Array.isArray(e) || Array.isArray(n))
-    return !Array.isArray(e) || !Array.isArray(n) || e.length !== n.length ? !1 : e.every((o, c) => q(o, n[c]));
-  if (f(e) || f(n)) {
-    if (!f(e) || !f(n)) return !1;
-    const o = Object.keys(e), c = Object.keys(n);
-    return o.length !== c.length ? !1 : o.every((a) => M(n, a) && q(e[a], n[a]));
+  const e = B(t), s = B(r);
+  if (Object.is(e, s)) return !0;
+  if (Array.isArray(e) || Array.isArray(s))
+    return !Array.isArray(e) || !Array.isArray(s) || e.length !== s.length ? !1 : e.every((n, c) => q(n, s[c]));
+  if (f(e) || f(s)) {
+    if (!f(e) || !f(s)) return !1;
+    const n = Object.keys(e), c = Object.keys(s);
+    return n.length !== c.length ? !1 : n.every((a) => M(s, a) && q(e[a], s[a]));
   }
   return !1;
 }, gt = (t, r) => {
   if (q(t, r)) return {};
   if (Array.isArray(t) || !f(t) || !f(r)) return h(t);
   const e = {};
-  return Object.keys(t).forEach((n) => {
-    if (!q(t[n], r[n])) {
-      if (f(t[n]) && f(r[n])) {
-        const o = gt(t[n], r[n]);
-        if (f(o) && Object.keys(o).length === 0) return;
-        e[n] = o;
+  return Object.keys(t).forEach((s) => {
+    if (!q(t[s], r[s])) {
+      if (f(t[s]) && f(r[s])) {
+        const n = gt(t[s], r[s]);
+        if (f(n) && Object.keys(n).length === 0) return;
+        e[s] = n;
         return;
       }
-      e[n] = h(t[n]);
+      e[s] = h(t[s]);
     }
   }), e;
 }, pt = (t, r, e = "") => {
   if (q(t, r)) return [];
   if (!f(t) || !f(r)) return e ? [e] : [];
-  const n = /* @__PURE__ */ new Set([...Object.keys(t), ...Object.keys(r)]), o = [];
-  return n.forEach((c) => {
+  const s = /* @__PURE__ */ new Set([...Object.keys(t), ...Object.keys(r)]), n = [];
+  return s.forEach((c) => {
     const a = e ? `${e}.${c}` : c;
-    o.push(...pt(t[c], r[c], a));
-  }), o;
+    n.push(...pt(t[c], r[c], a));
+  }), n;
 }, U = (t) => t == null ? [] : Array.isArray(t) ? t.flatMap((r) => U(r)).filter((r) => typeof r == "string") : typeof t == "string" ? [t] : typeof t == "number" || typeof t == "boolean" ? [String(t)] : f(t) ? Object.values(t).flatMap((r) => U(r)) : [], yt = (t, r = "") => t == null ? [] : Array.isArray(t) || typeof t == "string" ? r ? [r] : [] : f(t) ? Object.keys(t).flatMap((e) => {
-  const n = r ? `${r}.${e}` : e;
-  return yt(t[e], n);
+  const s = r ? `${r}.${e}` : e;
+  return yt(t[e], s);
 }) : r ? [r] : [], W = class extends Error {
   constructor(t) {
     super(t.message ?? "Request failed"), this.name = "ApixError", this.httpCode = t.httpCode, this.body = t.body, this.aborted = !!t.aborted, this.timeout = !!t.timeout, this.cause = t.cause, this.errorBag = t.errors ?? t.body?.errors ?? {};
@@ -182,12 +182,12 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
   }
   return typeof t == "string" && t.trim() ? t : r;
 }, Nt = (t) => t?.errors ?? {}, _t = (t) => (t ?? "GET").toString().toUpperCase(), Y = (t) => t === "GET" || t === "HEAD", x = (t) => typeof t == "function" ? t() : t, Qt = (t, r, e) => {
-  const n = new Headers(t), o = (c) => {
+  const s = new Headers(t), n = (c) => {
     c && new Headers(c).forEach((a, i) => {
-      n.set(i, a);
+      s.set(i, a);
     });
   };
-  return o(x(r)), o(x(e)), n;
+  return n(x(r)), n(x(e)), s;
 }, Z = (t, r, e) => {
   if (e !== void 0) {
     if (e === null) {
@@ -199,12 +199,12 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
       return;
     }
     if (Array.isArray(e)) {
-      e.forEach((n) => Z(t, r, n));
+      e.forEach((s) => Z(t, r, s));
       return;
     }
     if (typeof e == "object") {
-      Object.keys(e).forEach((n) => {
-        Z(t, `${r}.${n}`, e[n]);
+      Object.keys(e).forEach((s) => {
+        Z(t, `${r}.${s}`, e[s]);
       });
       return;
     }
@@ -212,38 +212,38 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
   }
 }, Vt = (t, r) => {
   if (!r || Object.keys(r).length === 0) return t;
-  const [e, n = ""] = t.split("#"), o = e.includes("?") ? "&" : "?", c = new URLSearchParams();
+  const [e, s = ""] = t.split("#"), n = e.includes("?") ? "&" : "?", c = new URLSearchParams();
   Object.keys(r).forEach((i) => {
     Z(c, i, r[i]);
   });
   const a = c.toString();
-  return a ? `${e}${o}${a}${n ? `#${n}` : ""}` : t;
+  return a ? `${e}${n}${a}${s ? `#${s}` : ""}` : t;
 }, Xt = (t, r) => r ? /^(https?:)?\/\//i.test(r) || !t ? r : r.startsWith("?") || r.startsWith("#") ? `${t}${r}` : t.endsWith("/") && r.startsWith("/") ? `${t}${r.slice(1)}` : !t.endsWith("/") && !r.startsWith("/") ? `${t}/${r}` : `${t}${r}` : t, lt = (t, r) => {
   if (!r || Object.keys(r).length === 0) return t;
   if (t instanceof FormData) {
     const e = new FormData();
-    return t.forEach((n, o) => {
-      e.append(o, n);
-    }), Object.keys(r).forEach((n) => {
-      const o = r[n];
-      if (o !== void 0) {
-        if (o instanceof Blob) {
-          e.append(n, o);
+    return t.forEach((s, n) => {
+      e.append(n, s);
+    }), Object.keys(r).forEach((s) => {
+      const n = r[s];
+      if (n !== void 0) {
+        if (n instanceof Blob) {
+          e.append(s, n);
           return;
         }
-        if (typeof o == "object" && o !== null) {
-          e.append(n, JSON.stringify(o));
+        if (typeof n == "object" && n !== null) {
+          e.append(s, JSON.stringify(n));
           return;
         }
-        e.append(n, o === null ? "" : String(o));
+        e.append(s, n === null ? "" : String(n));
       }
     }), e;
   }
   return f(t) ? F(r, t) : t ?? h(r);
 }, Yt = (t, r) => {
   let e = !1;
-  return t.forEach((n, o) => {
-    o.toLowerCase() === r.toLowerCase() && (e = !0);
+  return t.forEach((s, n) => {
+    n.toLowerCase() === r.toLowerCase() && (e = !0);
   }), e;
 }, Zt = (t, r, e) => {
   if (!Y(t) && r != null)
@@ -273,29 +273,30 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
     only: e.only === void 0 ? r.only : e.only,
     omit: e.omit === void 0 ? r.omit : e.omit
   };
-}, tr = (t, r) => r === void 0 ? t.length > 0 : r.length === 0 ? !1 : t.some((e) => r.some((n) => {
-  const o = String(n);
-  return e === o || e.startsWith(`${o}.`);
-})), rr = async (t, r, e, n, o, c, a) => {
+}, tr = (t, r) => r === void 0 ? t.length > 0 : r.length === 0 ? !1 : t.some((e) => r.some((s) => {
+  const n = String(s);
+  return e === n || e.startsWith(`${n}.`);
+})), rr = async (t, r, e, s, n, c, a) => {
   let i = e.path === void 0 ? t : C(t, e.path);
   const b = e.after;
   return b && (i = await b(i, {
     model: r,
     options: e,
-    url: n,
-    method: o,
+    url: s,
+    method: n,
     ok: c,
     status: a
   })), R(i, e.response);
-}, z = (t, r, e = {}, n = "json") => {
-  const o = {
-    immediate: n !== "formData",
+}, z = (t, r, e = {}, s = "json") => {
+  const n = {
+    immediate: s !== "formData",
     abort: !0,
     locked: !1,
-    snapshot: n !== "formData",
+    snapshot: s !== "formData",
     clearErrorOnChange: !0,
+    timeout: t.timeout,
     ...e
-  }, c = X(o), a = dt({
+  }, c = X(n), a = dt({
     data: c,
     processing: !1,
     httpCode: null,
@@ -309,17 +310,17 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
     latestAppliedRequestId: 0,
     activeLocalRequests: 0,
     currentPromise: null,
-    original: o.snapshot === !1 ? null : H(a.data, o.omit),
+    original: n.snapshot === !1 ? null : H(a.data, n.omit),
     lastError: null,
     muteWatch: 0,
-    bodyType: n
+    bodyType: s
   };
   let b = h(a.data), D = null, E = null;
-  const k = (s) => {
+  const k = (o) => {
     i.muteWatch += 1;
     try {
-      s(), b = h(a.data);
-      const u = ft(o.watch, o);
+      o(), b = h(a.data);
+      const u = ft(n.watch, n);
       D = u ? R(a.data, {
         only: u.only,
         omit: u.omit
@@ -329,26 +330,26 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
         i.muteWatch = Math.max(0, i.muteWatch - 1);
       });
     }
-  }, tt = (s) => {
-    a.processing !== s && (a.processing = s, o.onProcessing?.(s, a));
+  }, tt = (o) => {
+    a.processing !== o && (a.processing = o, n.onProcessing?.(o, a));
   }, bt = () => {
     i.activeLocalRequests += 1, t.activeRequests += 1, tt(!0);
   }, Et = () => {
     i.activeLocalRequests = Math.max(0, i.activeLocalRequests - 1), t.activeRequests = Math.max(0, t.activeRequests - 1), tt(i.activeLocalRequests > 0);
   }, At = () => {
-    o.snapshot === !1 || vt(a.data) || (i.original = H(a.data, o.omit));
+    n.snapshot === !1 || vt(a.data) || (i.original = H(a.data, n.omit));
   }, N = () => {
     a.message = null, i.lastError = null;
-  }, w = () => i.lastError, _ = (s) => {
-    i.lastError = s, a.message = s?.message ?? null;
-  }, Dt = () => w()?.errors() ?? {}, rt = (s, u) => f(s) ? {
-    ...s,
+  }, w = () => i.lastError, _ = (o) => {
+    i.lastError = o, a.message = o?.message ?? null;
+  }, Dt = () => w()?.errors() ?? {}, rt = (o, u) => f(o) ? {
+    ...o,
     errors: u
-  } : { errors: u }, et = (s) => {
+  } : { errors: u }, et = (o) => {
     const u = w();
     if (!u) return;
     const l = h(u.errors());
-    if (mt(l, s), new W({
+    if (mt(l, o), new W({
       httpCode: u.httpCode,
       body: rt(u.body, l),
       message: u.message,
@@ -367,33 +368,33 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
       aborted: u.aborted,
       timeout: u.timeout
     }));
-  }, qt = (s) => {
+  }, qt = (o) => {
     const u = w();
     u && u.keys().forEach((l) => {
-      (l === s || l.startsWith(`${s}.`) || s.startsWith(`${l}.`)) && et(l);
+      (l === o || l.startsWith(`${o}.`) || o.startsWith(`${l}.`)) && et(l);
     });
-  }, wt = (s) => {
-    a.data = $(s);
-  }, jt = (s) => {
+  }, wt = (o) => {
+    a.data = $(o);
+  }, jt = (o) => {
     if (Array.isArray(a.data)) {
-      a.data.push(s);
+      a.data.push(o);
       return;
     }
-    if (f(a.data) && f(s)) {
-      a.data = F(a.data, s);
+    if (f(a.data) && f(o)) {
+      a.data = F(a.data, o);
       return;
     }
-    a.data = $(s);
-  }, Rt = (s, u, l) => {
-    i.bodyType !== "formData" && s !== void 0 && k(() => {
-      const m = u === "reload" ? X(l) : $(a.data), d = F(m, s), p = K(a.data, d);
+    a.data = $(o);
+  }, Rt = (o, u, l) => {
+    i.bodyType !== "formData" && o !== void 0 && k(() => {
+      const m = u === "reload" ? X(l) : $(a.data), d = F(m, o), p = K(a.data, d);
       p !== a.data && (a.data = p);
     });
-  }, st = (s, u, l = !1, m = !1) => {
+  }, st = (o, u, l = !1, m = !1) => {
     k(() => {
       if (!u?.only && !u?.omit && l) {
-        const P = $(s);
-        m && f(P) && o.omit?.forEach((v) => {
+        const P = $(o);
+        m && f(P) && n.omit?.forEach((v) => {
           const A = J(a.data, v);
           A.exists && ht(P, A.segments, A.value);
         });
@@ -401,26 +402,26 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
         O !== a.data && (a.data = O);
         return;
       }
-      const d = R(s, u), p = F(a.data, d), y = K(a.data, p);
+      const d = R(o, u), p = F(a.data, d), y = K(a.data, p);
       y !== a.data && (a.data = y);
     });
-  }, Pt = (s) => {
-    o.snapshot === !1 || i.original === null || st(i.original, s, !0, !0);
-  }, Ot = (s) => {
-    st(X(o), s, !0);
-  }, nt = (s) => {
-    if (o.snapshot === !1 || i.original === null) return !1;
-    const u = H(a.data, o.omit);
-    return s !== void 0 ? o.omit?.some((l) => String(l) === String(s)) ? !1 : !q(C(u, s), C(i.original, s)) : !q(u, i.original);
-  }, Ct = (s) => o.snapshot === !1 || i.original === null ? s === void 0 ? null : void 0 : h(s === void 0 ? i.original : C(i.original, s)), Tt = (s) => {
-    if (o.snapshot === !1 || i.original === null) return s === void 0 ? {} : void 0;
-    const u = H(a.data, o.omit);
-    return s !== void 0 ? nt(s) ? h(C(u, s)) : void 0 : gt(u, i.original);
-  }, xt = (s, u) => {
+  }, Pt = (o) => {
+    n.snapshot === !1 || i.original === null || st(i.original, o, !0, !0);
+  }, Ot = (o) => {
+    st(X(n), o, !0);
+  }, ot = (o) => {
+    if (n.snapshot === !1 || i.original === null) return !1;
+    const u = H(a.data, n.omit);
+    return o !== void 0 ? n.omit?.some((l) => String(l) === String(o)) ? !1 : !q(C(u, o), C(i.original, o)) : !q(u, i.original);
+  }, Ct = (o) => n.snapshot === !1 || i.original === null ? o === void 0 ? null : void 0 : h(o === void 0 ? i.original : C(i.original, o)), Tt = (o) => {
+    if (n.snapshot === !1 || i.original === null) return o === void 0 ? {} : void 0;
+    const u = H(a.data, n.omit);
+    return o !== void 0 ? ot(o) ? h(C(u, o)) : void 0 : gt(u, i.original);
+  }, xt = (o, u) => {
     const l = {
+      ...n,
       ...o,
-      ...s,
-      method: u ?? s?.method ?? o.method
+      method: u ?? o?.method ?? n.method
     };
     return {
       ...l,
@@ -428,34 +429,34 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
       headers: x(l.headers),
       body: x(l.body)
     };
-  }, St = async (s, u, l, m) => {
-    if (s.body !== void 0) return s.body;
+  }, Bt = async (o, u, l, m) => {
+    if (o.body !== void 0) return o.body;
     if (u === "reload") return;
     let d = i.bodyType === "formData" ? a.data : R(a.data, {
-      only: s.only,
-      omit: s.omit
+      only: o.only,
+      omit: o.omit
     });
-    return s.before && (d = await s.before(d, {
+    return o.before && (d = await o.before(d, {
       model: a,
-      options: s,
+      options: o,
       url: l,
       method: m
     })), d;
-  }, Q = (s) => new W({
-    httpCode: s.httpCode ?? null,
-    body: s.body,
-    message: s.message ?? Jt(s.body, s.fallback),
-    errors: s.errors ?? Nt(s.body),
-    aborted: s.aborted,
-    timeout: s.timeout,
-    cause: s.cause
-  }), I = (s) => {
+  }, Q = (o) => new W({
+    httpCode: o.httpCode ?? null,
+    body: o.body,
+    message: o.message ?? Jt(o.body, o.fallback),
+    errors: o.errors ?? Nt(o.body),
+    aborted: o.aborted,
+    timeout: o.timeout,
+    cause: o.cause
+  }), I = (o) => {
     if (i.disposed) return Promise.reject(Q({
       httpCode: null,
       message: "Model has been stopped",
       aborted: !0
     }));
-    const u = i.requestId + 1, l = s.options, m = _t(l?.method ?? s.method ?? o.method ?? "GET"), d = xt(l, m);
+    const u = i.requestId + 1, l = o.options, m = _t(l?.method ?? o.method ?? n.method ?? "GET"), d = xt(l, m);
     if (d.locked && a.processing && i.currentPromise) return i.currentPromise;
     i.requestId = u, d.abort && i.controller && i.controller.abort();
     const p = new AbortController();
@@ -464,7 +465,7 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
     return O = (async () => {
       bt();
       try {
-        const v = Xt(t.baseUrl, s.url ?? l?.url ?? r), A = await St(d, s.mode, v, m), j = Qt(t.headers, o.headers, l?.headers), Mt = Y(m) ? A : lt(A, d.params), Ft = Y(m) ? lt(A, d.params) : void 0, V = Vt(v, Ft), It = Zt(m, Mt, j);
+        const v = Xt(t.baseUrl, o.url ?? l?.url ?? r), A = await Bt(d, o.mode, v, m), j = Qt(t.headers, n.headers, l?.headers), Mt = Y(m) ? A : lt(A, d.params), Ft = Y(m) ? lt(A, d.params) : void 0, V = Vt(v, Ft), It = Zt(m, Mt, j);
         d.timeout && d.timeout > 0 && (i.timeoutId = setTimeout(() => {
           y = !0, p.abort();
         }, d.timeout));
@@ -495,7 +496,7 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
           throw P = T, it && (a.httpCode = g.status, _(T)), d.onError?.(T, a), T;
         }
         const ut = await rr(L, a, d, V, m, g.ok, g.status);
-        return it && (a.httpCode = g.status, N(), Rt(ut, s.mode, d), At(), i.latestAppliedRequestId = u), d.onSuccess?.(ut, a), a.data;
+        return it && (a.httpCode = g.status, N(), Rt(ut, o.mode, d), At(), i.latestAppliedRequestId = u), d.onSuccess?.(ut, a), a.data;
       } catch (v) {
         const A = typeof DOMException < "u" && v instanceof DOMException ? v.name === "AbortError" : v?.name === "AbortError", j = v instanceof W ? v : Q({
           httpCode: null,
@@ -511,177 +512,178 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
         i.timeoutId && (clearTimeout(i.timeoutId), i.timeoutId = null), i.controller === p && (i.controller = null), Et(), d.onFinish?.(a, P), i.currentPromise === O && (i.currentPromise = null);
       }
     })(), i.currentPromise = O, O;
-  }, Bt = (s, u) => {
-    const l = ct(s, u);
+  }, St = (o, u) => {
+    const l = ct(o, u);
     return I({
       url: l.url,
       options: l.options,
       mode: "send"
     });
-  }, B = (s, u, l) => {
+  }, S = (o, u, l) => {
     const m = ct(u, l);
     return I({
       url: m.url,
       options: m.options,
-      method: s,
+      method: o,
       mode: "send"
     });
-  }, Wt = (s) => I({
-    options: s,
+  }, Wt = (o) => I({
+    options: o,
     mode: "reload"
-  }), ot = (s) => I({
-    options: s,
+  }), nt = (o) => I({
+    options: o,
     mode: "send"
   }), at = () => {
-    i.disposed = !0, i.stops.forEach((s) => s()), i.stops = [], E && (clearTimeout(E), E = null), i.controller?.abort();
+    i.disposed = !0, i.stops.forEach((o) => o()), i.stops = [], E && (clearTimeout(E), E = null), i.controller?.abort();
   }, $t = () => {
-    const s = ft(o.watch, o), u = !!s, l = o.clearErrorOnChange !== !1;
+    const o = ft(n.watch, n), u = !!o, l = n.clearErrorOnChange !== !1;
     if (!u && !l) return;
-    D = s ? R(a.data, {
-      only: s.only,
-      omit: s.omit
+    D = o ? R(a.data, {
+      only: o.only,
+      omit: o.omit
     }) : null;
     const m = Kt(() => a.data, () => {
       const d = h(a.data);
       if (i.muteWatch > 0) {
-        b = d, D = s ? R(a.data, {
-          only: s.only,
-          omit: s.omit
+        b = d, D = o ? R(a.data, {
+          only: o.only,
+          omit: o.omit
         }) : null;
         return;
       }
       const p = pt(d, b);
-      if (l && p.forEach((y) => qt(y)), u && s) {
+      if (l && p.forEach((y) => qt(y)), u && o) {
         const y = R(a.data, {
-          only: s.only,
-          omit: s.omit
+          only: o.only,
+          omit: o.omit
         });
-        tr(p, s.only) && !q(y, D) && (E && clearTimeout(E), E = setTimeout(() => {
+        tr(p, o.only) && !q(y, D) && (E && clearTimeout(E), E = setTimeout(() => {
           E = null, a.send().catch(() => {
           });
-        }, s.debounce ?? 100)), D = y;
+        }, o.debounce ?? 100)), D = y;
       }
       b = d;
     }, { deep: !0 });
     i.stops.push(m);
   };
   return Object.assign(a, {
-    request: Bt,
-    get: (s, u) => B("GET", s, u),
-    post: (s, u) => B("POST", s, u),
-    put: (s, u) => B("PUT", s, u),
-    patch: (s, u) => B("PATCH", s, u),
-    delete: (s, u) => B("DELETE", s, u),
+    request: St,
+    get: (o, u) => S("GET", o, u),
+    post: (o, u) => S("POST", o, u),
+    put: (o, u) => S("PUT", o, u),
+    patch: (o, u) => S("PATCH", o, u),
+    delete: (o, u) => S("DELETE", o, u),
     reload: Wt,
-    refresh: ot,
-    send: ot,
+    refresh: nt,
+    send: nt,
     setData: wt,
     push: jt,
     reset: Pt,
     default: Ot,
-    isDirty: nt,
+    isDirty: ot,
     getOriginal: Ct,
     getDirty: Tt,
-    error: (s) => w()?.error(s) ?? null,
-    errors: (s) => s === void 0 ? Dt() : w()?.errors(s) ?? [],
+    error: (o) => w()?.error(o) ?? null,
+    errors: (o) => o === void 0 ? Dt() : w()?.errors(o) ?? [],
     errorKeys: () => w()?.keys() ?? [],
-    hasErrors: (s) => w()?.has(s) ?? !1,
+    hasErrors: (o) => w()?.has(o) ?? !1,
     firstErrorKey: () => w()?.firstKey() ?? null,
     getError: () => w(),
     clearError: et,
     clearErrors: N,
     stop: at
-  }), $t(), Lt() && zt(at), o.immediate !== !1 && queueMicrotask(() => {
+  }), $t(), Lt() && zt(at), n.immediate !== !1 && queueMicrotask(() => {
     i.disposed || a.reload().catch(() => {
     });
   }), a;
-}, sr = () => {
-  const t = dt({
+}, sr = (t = {}) => {
+  const r = dt({
     baseUrl: "",
     headers: {},
     activeRequests: 0,
-    transformers: []
-  }), r = {
+    transformers: [],
+    timeout: t.timeout
+  }), e = {
     get activeRequests() {
-      return t.activeRequests;
+      return r.activeRequests;
     },
     get processing() {
-      return t.activeRequests > 0;
+      return r.activeRequests > 0;
     },
-    setBaseUrl(e) {
-      return t.baseUrl = e, r;
+    setBaseUrl(s) {
+      return r.baseUrl = s, e;
     },
-    setHeaders(e) {
-      return t.headers = e, r;
+    setHeaders(s) {
+      return r.headers = s, e;
     },
-    setHeader(e, n) {
-      const o = new Headers(t.headers);
-      return typeof e == "string" ? o.set(e, n ?? "") : new Headers(e).forEach((c, a) => {
-        o.set(a, c);
-      }), t.headers = o, r;
+    setHeader(s, n) {
+      const c = new Headers(r.headers);
+      return typeof s == "string" ? c.set(s, n ?? "") : new Headers(s).forEach((a, i) => {
+        c.set(i, a);
+      }), r.headers = c, e;
     },
-    transformResponse(e) {
-      return t.transformers.push(e), r;
+    transformResponse(s) {
+      return r.transformers.push(s), e;
     },
-    request(e, n = {}) {
-      return z(t, e, {
+    request(s, n = {}) {
+      return z(r, s, {
         default: () => null,
         immediate: !1,
         snapshot: !1
       }, "json").request(n);
     },
-    get(e, n = {}) {
-      return r.request(e, {
+    get(s, n = {}) {
+      return e.request(s, {
         ...n,
         method: "GET"
       });
     },
-    post(e, n = {}) {
-      return r.request(e, {
+    post(s, n = {}) {
+      return e.request(s, {
         ...n,
         method: "POST"
       });
     },
-    put(e, n = {}) {
-      return r.request(e, {
+    put(s, n = {}) {
+      return e.request(s, {
         ...n,
         method: "PUT"
       });
     },
-    patch(e, n = {}) {
-      return r.request(e, {
+    patch(s, n = {}) {
+      return e.request(s, {
         ...n,
         method: "PATCH"
       });
     },
-    delete(e, n = {}) {
-      return r.request(e, {
+    delete(s, n = {}) {
+      return e.request(s, {
         ...n,
         method: "DELETE"
       });
     },
-    form(e = (() => ({})), n = {}) {
-      return z(t, "", {
+    form(s = (() => ({})), n = {}) {
+      return z(r, "", {
         ...n,
-        default: e,
+        default: s,
         immediate: !1
       }, "json");
     },
-    create(e, n = {}) {
-      return z(t, e, n, "json");
+    create(s, n = {}) {
+      return z(r, s, n, "json");
     },
-    createModel(e, n = {}) {
-      return r.create(e, n);
+    createModel(s, n = {}) {
+      return e.create(s, n);
     },
-    createCollection(e, n = {}) {
-      return r.create(e, {
+    createCollection(s, n = {}) {
+      return e.create(s, {
         default: () => [],
         snapshot: !1,
         ...n
       });
     },
-    createForm(e, n = {}) {
-      return z(t, e, {
+    createForm(s, n = {}) {
+      return z(r, s, {
         default: () => new FormData(),
         immediate: !1,
         method: "POST",
@@ -690,7 +692,7 @@ var M = (t, r) => Object.prototype.hasOwnProperty.call(t, r), f = (t) => {
       }, "formData");
     }
   };
-  return r;
+  return e;
 };
 export {
   W as ApixError,

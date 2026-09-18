@@ -130,6 +130,7 @@ export const createApixModel = <TData>(
     locked: false,
     snapshot: bodyType === 'formData' ? false : true,
     clearErrorOnChange: true,
+    timeout: apixState.timeout,
     ...initialOptions,
   }
 
